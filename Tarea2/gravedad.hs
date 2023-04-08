@@ -2,12 +2,17 @@
 
 {-suponiendo mi centro de gravedad esta en ´
 mi centro geometrico (en metros) -}
-cjul  = 0.815
+cjul :: Double = 0.815
 
 -- constante de gravitación universal
-let g :: Fractional Double = 0.00000000006674 
+gconst :: Double = 6.6743e-11
 
 -- mi masa kg
-m  = 85
+m :: Double = 85.00
 
-fgrav p r = (g*p*m) `div` (r + cjul)**2
+fgrav  :: Double -> Double -> Double
+fgrav p r = (gconst * p * m) / ((r + cjul)**2)
+
+
+--let mPlanetas = [5.972e24,7.349e22,1.024e26]
+--let raPlanetas = [45,78,78]
