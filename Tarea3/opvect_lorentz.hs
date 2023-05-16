@@ -51,3 +51,22 @@ unit  :: Vec -> Vec
 unit a = (mag a) ^/ a
 
 vecA :: Vec = Vec 1 2 3
+
+
+--Ejercicio 3:
+
+c :: Double = 299792458 -- ms^{-1}
+
+lorentz :: Double -> Vec -> Vec -> Vec
+lorentz q v b = q ^* (pX (c^/v) b)
+
+calculo = do
+    let qe :: Double = 1.6E-19 --As
+    let vecV = Vec 1.1E6 1.2E6 0 --ms^{-1}
+    let vecB = Vec 0 1.3E-2 0.1E-2 --N(Am)^{-1}
+
+    let f = lorentz qe vecV vecB
+    putStr "Fuerza de Lorentz de un electrón bajo las condiciones dadas (N) = "   
+    putStr ("(" ++ show (xComp f) ++ ", ") 
+    putStr (show (yComp f) ++ ", ") 
+    putStrLn ( show (zComp f) ++ ")") 
