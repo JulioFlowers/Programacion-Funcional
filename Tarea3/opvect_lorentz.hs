@@ -1,5 +1,5 @@
 {-
-Perez Flores Julio Alfonso TSFC II, Tarea 1
+Perez Flores Julio Alfonso TSFC II, Tarea 3
 
 Ejercicio 1: Define las operaciones para el data de vectores como vimos en clase para haskell:
 
@@ -53,12 +53,11 @@ unit a = (mag a) ^/ a
 vecA :: Vec = Vec 1 2 3
 
 
---Ejercicio 3:
-
-c :: Double = 299792458 -- ms^{-1}
+{-Ejercicio 3: Haciendo  uso  de  las  definiciones  para  vectores  que  diste  
+en el primer ejercicio calcula la fuerza de Lorentz que siente un electrón -}
 
 lorentz :: Double -> Vec -> Vec -> Vec
-lorentz q v b = q ^* (pX (c^/v) b)
+lorentz q v b = q ^* (pX v b)
 
 calculo = do
     let qe :: Double = 1.6E-19 --As
