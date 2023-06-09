@@ -9,8 +9,8 @@ ini = 0.0
 fin :: Double
 fin = 10.0
 
-pasos :: Int
-pasos = 1000
+pasos :: Double
+pasos = 1000.0
 
 h :: Double -> Double -> Double -> Double
 h c a ps = (c-a)/ps
@@ -61,9 +61,16 @@ kTermRK f but ph (x, t) m
 
                 
 
-rungeKutta ::  ((Double, Double)-> Double) -> [[Double]] -> [Double] ->  Double -> (Double, Double) -> Int -> (Double, Double)             
-rungeKutta f but b ph (x, t)  m = (x', t')
+pRungeKutta ::  ((Double, Double)-> Double) -> [[Double]] -> [Double] ->  Double -> (Double, Double) -> Int -> (Double, Double)             
+pRungeKutta f but b ph (x, t)  m = (x', t')
                              where
                                    x' = x + ph * sum ( zipWith (*) b (map (kTermRK f but ph (x, t))  [1 .. m]))
                                    t' = t + ph
 
+rKutta f but b ph m tin tm xin = xtpar 
+        where
+             iterador = iterate $ f but b ph m
+             xtpar = takeWhile (\( x , t) -> t <= tm ) $ iterador ( xin , tin )
+
+
+inc = h fin ini pasos
