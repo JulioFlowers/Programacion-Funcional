@@ -31,9 +31,16 @@ Runge- Kutta" (R-K de Cuarto Orden), y la regla de los 3/8  (R-K de
 Cuarto Orden con coeficientes del cuadro de Butcher modificados por
 Kutta-1901.)
 -}
+{-# language ExtendedDefaultRules, ScopedTypeVariables, QuasiQuotes, ParallelListComp #-}
 
 import System.IO
+import Graphics.Matplotlib
 
+cabeza  :: (a,b) -> a
+cabeza (x,_) = x
+
+cola :: (a,b) -> b
+cola (_,y) = y
 
 ini :: Double
 ini = 0.0
@@ -76,6 +83,7 @@ r3d8 = [[0, 0],
 br3d8 :: [Double]
 br3d8 = [1/8, 3/8, 3/8, 1/8]
 
+--Metodo de Euler
 eu :: [[Double]]
 eu = [[0, 0],
       [0, 0]]
@@ -115,32 +123,12 @@ rKutta f but b ph m to xo tf = txpar
             txpar = takeWhile (\( t , x) -> t <= tf ) $ iterador ( to , xo )
 
 
-func1 :: ( Double , Double ) -> Double
-func1 (t, x) = exp x - x*exp t  -- la f (x , y )
-
-rk4data = do
-   let rk4f = rKutta func1 rK4 brK4 0.01 4 0 0 5
-   outh <- openFile "expx-xexptrk4.csv" WriteMode
-   hPrint outh rk4f
-   hClose outh
-
-r3d8data = do
-   let r3d8f = rKutta func1 r3d8 br3d8 0.01 4 0 0 5
-   outh <- openFile "expx-xexptrd8.csv" WriteMode
-   hPrint outh r3d8f
-   hClose outh
-
-eudata = do
-   let euf = rKutta func1 eu beuler 0.01 1 0 0 5
-   outh <- openFile "expx-xexpteu.csv" WriteMode
-   hPrint outh euf
-   hClose outh
 
 func2 :: ( Double , Double ) -> Double
 func2 (t, x) = exp 1/t - ((exp 1/t)/t) -- la f (x , y )
 
 rk4data2 = do
-   let rk4f = rKutta func2 rK4 brK4 0.01 4 0.393 5 5
+   let rk4f = rKutta func2 rK4 brK4 0.001 4 0.393 5 5
    outh <- openFile "xe1dxrk4.csv" WriteMode
    hPrint outh rk4f
    hClose outh
@@ -178,3 +166,22 @@ eudata3 = do
    outh <- openFile "x3eu.csv" WriteMode
    hPrint outh euf
    hClose outh
+
+func1 :: ( Double , Double ) -> Double
+func1 (t, x) = (exp x) - x*(exp t)  -- la f (x , y )
+prueba = do
+   let rk4f = rKutta func1 rK4 brK4 0.2 4 0 0 3
+   let srk4f = unzip rk4f
+
+   let drk4f = cabeza srk4f
+   let irk4f = cola srk4f
+
+   let euf = rKutta func1 eu beuler 0.2 1 0 0 3
+   let seuf = unzip euf
+
+   let deuf = cabeza seuf
+   let ieuf = cola seuf
+   
+   onscreen $ plot drk4f irk4f @@ [o2 "label" "Rk4"] %
+              plot deuf ieuf @@ [o2 "label" "Eu"]%
+              legend @@ [o2 "fancybox" True, o2 "shadow" True, o2 "title" "exp(x)-xexp(t)", o2 "loc" "upper left"]
