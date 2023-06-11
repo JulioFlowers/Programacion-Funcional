@@ -170,13 +170,13 @@ eudata3 = do
 func1 :: ( Double , Double ) -> Double
 func1 (t, x) = (exp x) - x*(exp t)  -- la f (x , y )
 prueba = do
-   let rk4f = rKutta func1 rK4 brK4 0.2 4 0 0 3
+   let rk4f = rKutta func3 rK4 brK4 0.2 4 0 0 3
    let srk4f = unzip rk4f
 
    let drk4f = cabeza srk4f
    let irk4f = cola srk4f
 
-   let euf = rKutta func1 eu beuler 0.2 1 0 0 3
+   let euf = rKutta func3 eu beuler 0.2 1 0 0 3
    let seuf = unzip euf
 
    let deuf = cabeza seuf
@@ -184,4 +184,5 @@ prueba = do
    
    onscreen $ plot drk4f irk4f @@ [o2 "label" "Rk4"] %
               plot deuf ieuf @@ [o2 "label" "Eu"]%
+              plotMapLinear (\x -> x**3) (-0) 3 100 @@ [o2 "label" "x3"]%
               legend @@ [o2 "fancybox" True, o2 "shadow" True, o2 "title" "exp(x)-xexp(t)", o2 "loc" "upper left"]
